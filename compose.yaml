@@ -9,3 +9,18 @@ services:
       - ./backend:/app
       - /usr/local/cargo/registry
       - /app/target
+    env_file:
+      - ".env.dev"
+    depends_on:
+      - database
+
+  database:
+    build:
+      context: .
+      dockerfile: docker/database/Dockerfile
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/:/var/lib/postgresql/:delegated
+    env_file:
+      - ".env.dev"
