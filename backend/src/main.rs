@@ -1,25 +1,44 @@
+#[macro_use]
+extern crate rocket;
+
 mod database;
 
-#[macro_use] extern crate rocket;
-
-// use rocket::serde::{ Deserialize,  Serialize, json::Json };
-// use rocket::{ State, response::status::Custom ,http::Status };
-// use rocket_cors::{ CorsOptions, AllowedOrigins };
-
-// struct User {
-//     id: Option<i32>,
-//     name: String,
-//     email: String,
-// }
+use chrono::Utc;
+use entity::post::{ActiveModel as PostModel};
+use rocket::{State};
+use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
+use rocket::http::Status;
+use rocket::response::status;
+use rocket::serde::json::Json;
 
 #[get("/")]
 fn index() -> &'static str {
-    return "index page";
+    "index page"
 }
 
 #[get("/hello/world")]
 fn hello_world() -> &'static str {
-    return "hello world";
+    "hello world"
+}
+
+#[post("/post/placeholder")]
+async fn create_post_placeholder(connection: &State<DatabaseConnection>) -> Result<status::Accepted<Json<entity::post::Model>>, Status> {
+    let connection = connection as &DatabaseConnection;
+
+    let title = format!("post_title_{}", Utc::now().timestamp());
+
+    let post_model = PostModel {
+        id: NotSet,
+        title: Set(title),
+        content: Set(Some("dupa".to_string())),
+        published: Set(false),
+        created_at: Set(Utc::now().naive_local()),
+    };
+
+    match post_model.insert(connection).await {
+        Ok(result) => Ok(status::Accepted(Json(result))),
+        Err(_) => Err(Status::InternalServerError),
+    }
 }
 
 #[launch]
@@ -28,5 +47,5 @@ async fn rocket() -> _ {
 
     rocket::build()
         .manage(database)
-        .mount("/", routes![index, hello_world])
+        .mount("/", routes![index, hello_world, create_post_placeholder])
 }
