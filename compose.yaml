@@ -10,7 +10,7 @@ services:
       - /usr/local/cargo/registry
       - /app/target
     env_file:
-      - ".env.dev"
+      - ".env"
     depends_on:
       - database
 
@@ -23,4 +23,4 @@ services:
     volumes:
       - ./database/:/var/lib/postgresql/:delegated
     env_file:
-      - ".env.dev"
+      - ".env"
