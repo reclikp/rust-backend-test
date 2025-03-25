@@ -2,13 +2,15 @@ use rocket::serde::Serialize;
 use sea_orm::prelude::*;
 
 #[derive(DeriveEntityModel, Serialize, Debug, Clone)]
-#[sea_orm(table_name = "post")]
+#[sea_orm(table_name = "user")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub title: String,
-    pub content: Option<String>,
-    pub published: bool,
+    #[sea_orm(unique)]
+    pub username: String,
+    #[sea_orm(unique)]
+    pub email: String,
+    pub password: String,
     pub created_at: DateTime,
 }
 

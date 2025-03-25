@@ -1,7 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
-mod database;
+mod config;
+mod middleware;
 
 use chrono::Utc;
 use entity::post::{ActiveModel as PostModel};
@@ -43,7 +44,7 @@ async fn create_post_placeholder(connection: &State<DatabaseConnection>) -> Resu
 
 #[launch]
 async fn rocket() -> _ {
-    let database = database::connect().await;
+    let database = config::database::connect().await;
 
     rocket::build()
         .manage(database)
