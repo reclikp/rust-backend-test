@@ -3,6 +3,8 @@ extern crate rocket;
 
 mod config;
 mod middleware;
+mod route;
+mod controller;
 
 use chrono::Utc;
 use entity::post::{ActiveModel as PostModel};
