@@ -3,6 +3,7 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use jsonwebtoken::{encode, decode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use jsonwebtoken::errors::{Error, ErrorKind};
+use rocket::request::{FromRequest, Outcome};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Claims {
@@ -29,7 +30,7 @@ pub fn create_jwt(subject_id: i32) -> Result<String, Error> {
     encode(&header, &claims, &EncodingKey::from_secret(secret.as_bytes()))
 }
 
-fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
+pub fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
     let secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
     let token = token.trim_start_matches("Bearer").trim();
 

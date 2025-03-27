@@ -3,7 +3,6 @@ extern crate rocket;
 
 mod config;
 mod middleware;
-mod route;
 mod controller;
 
 use chrono::Utc;
@@ -49,6 +48,8 @@ async fn rocket() -> _ {
     let database = config::database::connect().await;
 
     rocket::build()
+        .attach(middleware::fairing::AuthenticationFairing)
         .manage(database)
         .mount("/", routes![index, hello_world, create_post_placeholder])
+        .mount("/public", routes![controller::authentication::jebanko])
 }

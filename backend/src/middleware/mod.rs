@@ -1,3 +1,4 @@
 pub mod authentication;
 pub mod network_response;
-mod jwt;
+pub mod jwt;
+pub mod fairing;
