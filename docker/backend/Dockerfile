@@ -6,9 +6,11 @@ RUN cargo install cargo-watch
 
 EXPOSE 8000
 
-COPY ../backend/Cargo.toml ./
+#COPY ../backend/Cargo.toml ./
 
-RUN cargo fetch
+#RUN find ../backend/ -name 'Cargo.toml' | cpio -pdm ./
+
+#RUN cargo fetch
 
 COPY ../backend .
 

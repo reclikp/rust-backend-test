@@ -5,7 +5,7 @@ use jsonwebtoken::{encode, decode, Algorithm, DecodingKey, EncodingKey, Header, 
 use jsonwebtoken::errors::{Error, ErrorKind};
 use rocket::request::{FromRequest, Outcome};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Display)]
 pub struct Claims {
     pub subject_id: i32,
     expiration: usize,
