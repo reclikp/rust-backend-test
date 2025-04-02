@@ -10,9 +10,9 @@ impl<'r> FromRequest<'r> for JWT {
     type Error = NetworkResponse;
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        fn is_valid(key: &str) -> Result<Claims, ErrorKind> {
-            decode_jwt(String::from(key))
-        }
+        // fn is_valid(key: &str) -> Result<Claims, ErrorKind> {
+        //     decode_jwt(String::from(key))
+        // }
 
         dbg!(request);
 

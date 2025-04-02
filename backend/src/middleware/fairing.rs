@@ -17,33 +17,34 @@ impl Fairing for AuthenticationFairing {
         }
     }
 
-    async fn on_request(&self, _req: &mut Request<'_>, _data: &mut Data<'_>) -> Outcome<Self, String> {
-        dbg!(&_req);
-
-        // fn is_valid(key: &str) -> Result<Claims, Error> {
-        //     Ok(decode_jwt(String::from(key))?)
-        // }
-
-        let authorization_header = _req.headers().get_one("Authorization");
-
-        match authorization_header {
-            None => {
-                Outcome::Error((Status::Unauthorized, "Missing Authorization header".to_string()))
-            },
-            Some(key) => match decode_jwt(key.to_string()) {
-                Ok(claims) => Outcome::Success((Status::Accepted, format!("JWT {}", claims))),
-                Err(error) => match error {
-                    jsonwebtoken::errors::ErrorKind::ExpiredSignature => {
-                        Outcome::Error((Status::Unauthorized, "The token has expired".to_string()))
-                    }
-                    jsonwebtoken::errors::ErrorKind::InvalidToken => {
-                        Outcome::Error((Status::Unauthorized, "The token is invalid".to_string()))
-                    }
-                    _ => {
-                        Outcome::Error((Status::Unauthorized, "The token is not working".to_string()))
-                    }
-                }
-            }
-        }
-    }
+    // Temporary disabled because of changing to the request guard
+    // async fn on_request(&self, _req: &mut Request<'_>, _data: &mut Data<'_>) -> Outcome<Self, String> {
+    //     dbg!(&_req);
+    //
+    //     // fn is_valid(key: &str) -> Result<Claims, Error> {
+    //     //     Ok(decode_jwt(String::from(key))?)
+    //     // }
+    //
+    //     let authorization_header = _req.headers().get_one("Authorization");
+    //
+    //     match authorization_header {
+    //         None => {
+    //             Outcome::Error((Status::Unauthorized, "Missing Authorization header".to_string()))
+    //         },
+    //         Some(key) => match decode_jwt(key.to_string()) {
+    //             Ok(claims) => Outcome::Success((Status::Accepted, format!("JWT {}", claims))),
+    //             Err(error) => match error {
+    //                 jsonwebtoken::errors::ErrorKind::ExpiredSignature => {
+    //                     Outcome::Error((Status::Unauthorized, "The token has expired".to_string()))
+    //                 }
+    //                 jsonwebtoken::errors::ErrorKind::InvalidToken => {
+    //                     Outcome::Error((Status::Unauthorized, "The token is invalid".to_string()))
+    //                 }
+    //                 _ => {
+    //                     Outcome::Error((Status::Unauthorized, "The token is not working".to_string()))
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
