@@ -16,8 +16,26 @@ impl<'r> FromRequest<'r> for JWT {
 
         dbg!(request);
 
-        // todo!();
+        let authorization_header = request.headers().get_one("Authorization");
 
-        Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("dupa kurwa chuj".to_string())))
+        match authorization_header {
+            None => {
+                Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("Missing Authorization header".to_string())))
+            },
+            Some(key) => match decode_jwt(key.to_string()) {
+                Ok(claims) => Outcome::Success(JWT {claims}),
+                Err(error) => match error {
+                    ErrorKind::ExpiredSignature => {
+                        Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("The token has expired".to_string())))
+                    }
+                    ErrorKind::InvalidToken => {
+                        Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("The token is invalid".to_string())))
+                    }
+                    _ => {
+                        Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("The authorization is not working".to_string())))
+                    }
+                }
+            }
+        }
     }
 }
