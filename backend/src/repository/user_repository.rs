@@ -1,6 +1,7 @@
-use sea_orm::{DatabaseConnection, EntityTrait};
+use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 use entity::user;
 
+#[derive(Clone)]
 pub struct UserRepository {
     connection: DatabaseConnection,
 }
@@ -17,5 +18,7 @@ impl UserRepository {
             .await;
 
         dbg!(&user);
+
+        user.unwrap()
     }
 }

@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
+use crate::config::app_state::AppState;
+
 mod config;
 mod middleware;
 mod controller;
@@ -9,10 +11,10 @@ mod service;
 
 #[launch]
 async fn rocket() -> _ {
-    let database = config::database::connect().await;
+    let state = AppState::new().await;
 
     rocket::build()
-        .manage(database)
+        .manage(state)
         .mount("/", controller::authentication::get_routes())
         .mount("/", controller::index::get_routes())
 }

@@ -1,11 +1,11 @@
 use rocket::{Route, State};
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 use entity::user;
-use crate::service::authentication as AuthenticationService;
+use crate::config::app_state::AppState;
 use crate::middleware::network_response::NetworkResponse;
 
 use crate::middleware::jwt::JWT;
 use crate::service;
+use crate::service::authentication::AuthenticationService;
 
 pub fn get_routes() -> Vec<Route> {
     routes![
@@ -21,11 +21,14 @@ fn jebanko(_jwt: JWT) -> Result<String, NetworkResponse> {
 
 #[post("/authenticate")]
 async fn authenticate(
-    db: &State<DatabaseConnection>
+    app_state: &State<AppState>,
+    // service: &State<AuthenticationService>,
 ) -> Result<NetworkResponse, NetworkResponse> {
-    let db = db as &DatabaseConnection;
+    // let result = service.authenticate().await;
+    //
+    // dbg!(result);
 
-    let dupa = service::authentication::authenticate().await;
+    // let dupa = service::authentication::authenticate().await;
 
     Ok(NetworkResponse::Created("Ok".to_string()))
 }

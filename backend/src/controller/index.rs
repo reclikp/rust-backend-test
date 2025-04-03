@@ -25,21 +25,25 @@ fn hello_world() -> &'static str {
 }
 
 #[post("/post/placeholder")]
-async fn create_post_placeholder(connection: &State<DatabaseConnection>) -> Result<status::Accepted<Json<entity::post::Model>>, Status> {
-    let connection = connection as &DatabaseConnection;
+async fn create_post_placeholder(
+    // connection: &State<DatabaseConnection>
+) -> Result<status::Accepted<Json<String>>, Status> {
+    // let connection = connection as &DatabaseConnection;
+    //
+    // let title = format!("post_title_{}", Utc::now().timestamp());
+    //
+    // let post_model = PostModel {
+    //     id: NotSet,
+    //     title: Set(title),
+    //     content: Set(Some("dupa".to_string())),
+    //     published: Set(false),
+    //     created_at: Set(Utc::now().naive_local()),
+    // };
+    //
+    // match post_model.insert(connection).await {
+    //     Ok(result) => Ok(status::Accepted(Json(result))),
+    //     Err(_) => Err(Status::InternalServerError),
+    // }
 
-    let title = format!("post_title_{}", Utc::now().timestamp());
-
-    let post_model = PostModel {
-        id: NotSet,
-        title: Set(title),
-        content: Set(Some("dupa".to_string())),
-        published: Set(false),
-        created_at: Set(Utc::now().naive_local()),
-    };
-
-    match post_model.insert(connection).await {
-        Ok(result) => Ok(status::Accepted(Json(result))),
-        Err(_) => Err(Status::InternalServerError),
-    }
+    Ok(status::Accepted(Json("sranko w dupanko".to_string())))
 }
