@@ -1,3 +1,4 @@
+use crate::middleware::request_models::AuthenticationRequest;
 use crate::repository::user_repository::UserRepository;
 
 #[derive(Clone)]
@@ -7,10 +8,18 @@ pub struct AuthenticationService {
 
 impl AuthenticationService {
     pub fn new(user_repository: UserRepository) -> Self {
-        AuthenticationService { user_repository }
+        Self { user_repository }
     }
 
-    pub async fn authenticate(&self) -> String {
-        "OK".to_string()
+    pub async fn authenticate(&self, request: AuthenticationRequest) -> Option<String> {
+        if let Some(user) = self
+            .user_repository
+            .find_by_username(&request.username)
+            .await
+        {
+            Some("OK_TOKEN".to_string())
+        } else {
+            None
+        }
     }
 }

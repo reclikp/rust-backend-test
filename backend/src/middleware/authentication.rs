@@ -3,7 +3,7 @@ use rocket::http::Status;
 use rocket::Request;
 use rocket::request::{FromRequest, Outcome};
 use crate::middleware::jwt::{decode_jwt, Claims, JWT};
-use crate::middleware::network_response::NetworkResponse;
+use crate::middleware::response_models::NetworkResponse;
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {

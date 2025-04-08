@@ -8,17 +8,17 @@ pub struct UserRepository {
 
 impl UserRepository {
     pub fn new(connection: DatabaseConnection) -> Self {
-        UserRepository { connection }
+        Self { connection }
     }
 
     pub async fn find_by_username(&self, username: &str) -> Option<user::Model> {
         let user = user::Entity::find()
-            .filter(user::Column::Username.eq("pjomter"))
+            .filter(user::Column::Username.eq(username))
             .one(&self.connection)
             .await;
 
         dbg!(&user);
 
-        user.unwrap()
+        user.unwrap_or(None)
     }
 }
