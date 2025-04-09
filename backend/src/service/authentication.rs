@@ -18,9 +18,7 @@ impl AuthenticationService {
             .find_by_username(&request.username)
             .await
         {
-
             create_jwt(user.id).ok()
-            // Some("OK_TOKEN".to_string())
         } else {
             None
         }

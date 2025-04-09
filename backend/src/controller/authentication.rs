@@ -20,7 +20,6 @@ async fn authenticate(
     request: Json<AuthenticationRequest>,
     app_state: &State<AppState>,
 ) -> Result<NetworkResponse, NetworkResponse> {
-    dbg!(&request);
     let result = app_state.authentication_service.authenticate(request.into_inner()).await;
 
     match result {
@@ -35,10 +34,4 @@ async fn authenticate(
         }
         None => Err(NetworkResponse::Unauthorized("Invalid credentials".to_string()))
     }
-
-    // let response = Response {
-    //     body: ResponseBody::AuthenticationToken(result),
-    // }
-    //
-    // Ok(NetworkResponse::Created("Ok".to_string()))
 }
