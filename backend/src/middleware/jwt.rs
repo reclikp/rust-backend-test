@@ -8,6 +8,7 @@ use std::env;
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Claims {
     pub subject_id: i32,
+    #[serde(rename = "exp")]
     expiration: usize,
 }
 

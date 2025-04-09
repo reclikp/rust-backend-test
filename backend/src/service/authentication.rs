@@ -1,3 +1,4 @@
+use crate::middleware::jwt::create_jwt;
 use crate::middleware::request_models::AuthenticationRequest;
 use crate::repository::user_repository::UserRepository;
 
@@ -17,7 +18,9 @@ impl AuthenticationService {
             .find_by_username(&request.username)
             .await
         {
-            Some("OK_TOKEN".to_string())
+
+            create_jwt(user.id).ok()
+            // Some("OK_TOKEN".to_string())
         } else {
             None
         }

@@ -32,6 +32,7 @@ impl<'r> FromRequest<'r> for JWT {
                         Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("The token is invalid".to_string())))
                     }
                     _ => {
+                        dbg!(error);
                         Outcome::Error((Status::Unauthorized, NetworkResponse::Unauthorized("The authorization is not working".to_string())))
                     }
                 }

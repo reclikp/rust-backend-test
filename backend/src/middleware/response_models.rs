@@ -14,7 +14,7 @@ pub enum NetworkResponse {
     #[response(status = 409)]
     Conflict(String),
     #[response(status = 500)]
-    InternalError(String),
+    InternalError(Option<String>),
 }
 
 #[derive(Serialize)]

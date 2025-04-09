@@ -1,9 +1,11 @@
+use crate::middleware::jwt::JWT;
+use crate::middleware::response_models::NetworkResponse;
 use chrono::Utc;
+use entity::post::ActiveModel as PostModel;
 use rocket::http::Status;
 use rocket::response::status;
 use rocket::serde::json::Json;
 use rocket::{Route, State};
-use entity::post::{ActiveModel as PostModel};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
 
 pub fn get_routes() -> Vec<Route> {
@@ -11,6 +13,7 @@ pub fn get_routes() -> Vec<Route> {
         index,
         hello_world,
         create_post_placeholder,
+        jebanko,
     ]
 }
 
@@ -27,7 +30,8 @@ fn hello_world() -> &'static str {
 #[post("/post/placeholder")]
 async fn create_post_placeholder(
     // connection: &State<DatabaseConnection>
-) -> Result<status::Accepted<Json<String>>, Status> {
+)
+ -> Result<status::Accepted<Json<String>>, Status> {
     // let connection = connection as &DatabaseConnection;
     //
     // let title = format!("post_title_{}", Utc::now().timestamp());
@@ -46,4 +50,9 @@ async fn create_post_placeholder(
     // }
 
     Ok(status::Accepted(Json("sranko w dupanko".to_string())))
+}
+
+#[get("/jebanko")]
+fn jebanko(_jwt: JWT) -> Result<String, NetworkResponse> {
+    Ok("ok".to_string())
 }
