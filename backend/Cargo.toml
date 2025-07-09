@@ -1,5 +1,5 @@
 [package]
-name = "backend-app"
+name = "backend_app"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,11 +8,13 @@ name = "main"
 path = "src/main.rs"
 
 [workspace]
-members = [".", "entity", "migration"]
+members = [".", "authentication_common", "authentication_macros", "entity", "migration"]
 
 [dependencies]
 entity = { path = "entity" }
 migration = { path = "migration" }
+authentication_macros = { path = "authentication_macros" }
+authentication_common = { path = "authentication_common" }
 
 rocket = { version = "0.5.1", features = ["json"] }
 tokio = { version = "1.44.1", features = ["full"] }

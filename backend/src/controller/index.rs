@@ -7,24 +7,20 @@ use rocket::response::status;
 use rocket::serde::json::Json;
 use rocket::{Route, State};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
+use auth_macros::require_role;
 
 pub fn get_routes() -> Vec<Route> {
     routes![
         index,
-        hello_world,
         create_post_placeholder,
-        jebanko,
+        authenticated_content,
+        admin_content,
     ]
 }
 
 #[get("/")]
 fn index() -> &'static str {
     "index page"
-}
-
-#[get("/hello/world")]
-fn hello_world() -> &'static str {
-    "hello world"
 }
 
 #[post("/post/placeholder")]
@@ -52,7 +48,13 @@ async fn create_post_placeholder(
     Ok(status::Accepted(Json("sranko w dupanko".to_string())))
 }
 
-#[get("/jebanko")]
-fn jebanko(_jwt: JWT) -> Result<String, NetworkResponse> {
-    Ok("ok".to_string())
+#[get("/authenticated-content")]
+fn authenticated_content(_jwt: JWT) -> Result<String, NetworkResponse> {
+    Ok("User has been authenticated".to_string())
+}
+
+// #[require_role("admin")]
+#[get("/admin-content")]
+fn admin_content(_jwt: JWT) -> Result<String, NetworkResponse> {
+    Ok("User has been authenticated".to_string())
 }
