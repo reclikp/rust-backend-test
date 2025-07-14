@@ -17,7 +17,14 @@ impl UserRepository {
             .one(&self.connection)
             .await;
 
-        dbg!(&user);
+        user.unwrap_or(None)
+    }
+
+    pub async fn find_by_id(&self, id: i32) -> Option<user::Model> {
+        let user = user::Entity::find()
+            .filter(user::Column::Id.eq(id))
+            .one(&self.connection)
+            .await;
 
         user.unwrap_or(None)
     }
