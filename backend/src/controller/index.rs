@@ -55,6 +55,6 @@ fn authenticated_content(_jwt: JWT) -> Result<String, NetworkResponse> {
 
 #[get("/admin-content")]
 fn admin_content(_user: AuthenticatedUser) -> Result<String, NetworkResponse> {
-    _user.has_role("super_admin")?;
+    _user.has_role("super_admin");
     Ok("User has been authenticated".to_string())
 }

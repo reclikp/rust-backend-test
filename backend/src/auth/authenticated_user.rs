@@ -10,7 +10,7 @@ pub struct AuthenticatedUser {
 impl AuthenticatedUser {
     pub fn has_role(&self, role: &str) -> Result<(), NetworkResponse> {
         if self.roles.contains(&role.to_string()) {
-            Ok(())
+            Ok({})
         } else {
             Err(NetworkResponse::Unauthorized("User doesn't have sufficient permissions".to_string()))
         }
