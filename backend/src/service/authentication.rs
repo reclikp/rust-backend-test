@@ -1,4 +1,4 @@
-use crate::middleware::jwt::create_jwt;
+use crate::auth::jwt::create_jwt;
 use crate::middleware::request_models::AuthenticationRequest;
 use crate::repository::user_repository::UserRepository;
 

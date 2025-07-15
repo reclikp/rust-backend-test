@@ -1,4 +1,3 @@
-use crate::middleware::jwt::{AuthenticatedUser, JWT};
 use crate::middleware::response_models::NetworkResponse;
 use chrono::Utc;
 use entity::post::ActiveModel as PostModel;
@@ -7,6 +6,8 @@ use rocket::response::status;
 use rocket::serde::json::Json;
 use rocket::{Route, State};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
+use crate::auth::authenticated_user::AuthenticatedUser;
+use crate::auth::jwt::JWT;
 
 pub fn get_routes() -> Vec<Route> {
     routes![
@@ -54,6 +55,6 @@ fn authenticated_content(_jwt: JWT) -> Result<String, NetworkResponse> {
 
 #[get("/admin-content")]
 fn admin_content(_user: AuthenticatedUser) -> Result<String, NetworkResponse> {
-    _user.has_role("admin")?;
+    _user.has_role("super_admin")?;
     Ok("User has been authenticated".to_string())
 }

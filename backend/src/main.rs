@@ -8,6 +8,7 @@ mod middleware;
 mod controller;
 mod repository;
 mod service;
+mod auth;
 
 #[launch]
 async fn rocket() -> _ {

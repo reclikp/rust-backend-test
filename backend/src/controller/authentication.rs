@@ -4,7 +4,7 @@ use entity::user;
 use rocket::serde::json::Json;
 use rocket::{Route, State};
 
-use crate::middleware::jwt::JWT;
+use crate::auth::jwt::JWT;
 use crate::middleware::request_models::AuthenticationRequest;
 use crate::service;
 use crate::service::authentication::AuthenticationService;

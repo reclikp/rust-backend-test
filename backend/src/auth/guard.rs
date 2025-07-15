@@ -1,82 +1,11 @@
+use jsonwebtoken::errors::ErrorKind;
+use rocket::http::Status;
+use rocket::Request;
+use rocket::request::{FromRequest, Outcome};
+use crate::auth::authenticated_user::AuthenticatedUser;
+use crate::auth::jwt::{decode_jwt, JWT};
 use crate::config::app_state::AppState;
 use crate::middleware::response_models::NetworkResponse;
-use chrono::Utc;
-use entity::user::Model as User;
-use jsonwebtoken::errors::{Error, ErrorKind};
-use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation, decode, encode};
-use rocket::Request;
-use rocket::http::Status;
-use rocket::request::{FromRequest, Outcome};
-use rocket::serde::{Deserialize, Serialize};
-use std::env;
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct Claims {
-    pub subject_id: i32,
-    #[serde(rename = "exp")]
-    expiration: usize,
-}
-
-#[derive(Debug)]
-pub struct JWT {
-    pub claims: Claims,
-}
-
-#[derive(Debug)]
-pub struct AuthenticatedUser {
-    pub user: User,
-    pub roles: Vec<String>,
-}
-
-impl AuthenticatedUser {
-    pub fn has_role(&self, role: &str) -> Result<(), NetworkResponse> {
-        if self.roles.contains(&role.to_string()) {
-            Ok(())
-        } else {
-            Err(NetworkResponse::Unauthorized("User doesn't have sufficient permissions".to_string()))
-        }
-    }
-}
-
-pub fn create_jwt(subject_id: i32) -> Result<String, Error> {
-    let secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    let expiration_seconds = env::var("JWT_EXPIRATION_SECONDS")
-        .expect("JWT_EXPIRATION_SECONDS must be set")
-        .parse::<i64>()
-        .unwrap();
-
-    let expiration = Utc::now()
-        .checked_add_signed(chrono::Duration::seconds(expiration_seconds))
-        .unwrap()
-        .timestamp() as usize;
-
-    let claims = Claims {
-        subject_id,
-        expiration,
-    };
-
-    let header = Header::new(Algorithm::HS512);
-
-    encode(
-        &header,
-        &claims,
-        &EncodingKey::from_secret(secret.as_bytes()),
-    )
-}
-
-pub fn decode_jwt(token: &str) -> Result<Claims, ErrorKind> {
-    let secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    let token = token.trim_start_matches("Bearer").trim();
-
-    match decode::<Claims>(
-        &token,
-        &DecodingKey::from_secret(secret.as_bytes()),
-        &Validation::new(Algorithm::HS512),
-    ) {
-        Ok(token) => Ok(token.claims),
-        Err(err) => Err(err.kind().to_owned()),
-    }
-}
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {
