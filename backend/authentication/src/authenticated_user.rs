@@ -1,5 +1,4 @@
-use rocket::http::Status;
-use crate::middleware::response_models::ErrorResponse;
+use api::response_models::{ErrorResponse, StatusCode};
 use entity::user::Model as User;
 
 #[derive(Debug)]
@@ -13,7 +12,7 @@ impl AuthenticatedUser {
         if self.roles.contains(&role.to_string()) {
             Ok({})
         } else {
-            Err(ErrorResponse::new(Status::Unauthorized, "User doesn't have sufficient permissions"))
+            Err(ErrorResponse::new(StatusCode::FORBIDDEN, "User doesn't have sufficient permissions"))
         }
     }
 }

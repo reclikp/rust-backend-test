@@ -1,5 +1,5 @@
+use api::request_models::AuthenticationRequest;
 use crate::auth::jwt::create_jwt;
-use crate::middleware::request_models::AuthenticationRequest;
 use crate::repository::user_repository::UserRepository;
 
 #[derive(Clone)]

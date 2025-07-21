@@ -1,0 +1,54 @@
+use serde::Serialize;
+
+#[derive(Debug, Clone, Copy, Serialize)]
+pub struct StatusCode {
+    pub code: u16,
+    pub reason: &'static str,
+}
+
+impl StatusCode {
+    pub const OK: StatusCode = StatusCode { code: 200, reason: "OK" };
+    pub const BAD_REQUEST: StatusCode = StatusCode { code: 400, reason: "Bad Request" };
+    pub const UNAUTHORIZED: StatusCode = StatusCode { code: 401, reason: "Unauthorized" };
+    pub const FORBIDDEN: StatusCode = StatusCode { code: 403, reason: "Forbidden" };
+    pub const NOT_FOUND: StatusCode = StatusCode { code: 404, reason: "Not Found" };
+    pub const INTERNAL_SERVER_ERROR: StatusCode = StatusCode { code: 500, reason: "Internal Server Error" };
+}
+
+#[derive(Serialize)]
+pub struct Response<T> {
+    pub data: T,
+}
+
+impl<T: Serialize> Response<T> {
+    pub fn new(data: T) -> Self {
+        Self { data }
+    }
+}
+
+#[derive(Serialize, Debug)]
+pub struct ErrorResponse {
+    pub error: ErrorDetail,
+}
+
+#[derive(Serialize, Debug)]
+pub struct ErrorDetail {
+    pub code: u16,
+    pub reason: String,
+    pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub details: Option<serde_json::Value>,
+}
+
+impl ErrorResponse {
+    pub fn new(status: StatusCode, description: &str) -> Self {
+        Self {
+            error: ErrorDetail {
+                code: status.code,
+                reason: status.reason.to_string(),
+                description: description.to_string(),
+                details: None,
+            }
+        }
+    }
+}

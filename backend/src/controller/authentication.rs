@@ -1,11 +1,11 @@
 use crate::config::app_state::AppState;
-use crate::middleware::response_models::{ErrorResponse, Response};
 use rocket::serde::json::Json;
 use rocket::{Route, State};
 use rocket::http::Status;
 use serde::Serialize;
+use api::request_models::AuthenticationRequest;
+use api::response_models::{ErrorResponse, Response, StatusCode};
 use crate::auth::jwt::JWT;
-use crate::middleware::request_models::AuthenticationRequest;
 use crate::service;
 use crate::service::authentication::AuthenticationService;
 
@@ -33,6 +33,6 @@ async fn authenticate(
 
             Ok(response)
         }
-        None => Err(ErrorResponse::new(Status::Unauthorized, "Invalid credentials"))
+        None => Err(ErrorResponse::new(StatusCode::UNAUTHORIZED, "Invalid credentials"))
     }
 }

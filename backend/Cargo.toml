@@ -8,12 +8,13 @@ name = "main"
 path = "src/main.rs"
 
 [workspace]
-members = [".", "entity", "migration"]
+members = [".", "api", "authentication", "entity", "migration"]
 
 [dependencies]
 entity = { path = "entity" }
 migration = { path = "migration" }
-authentication-macros = { path = "authentication-macros" }
+macros = { path = "macros" }
+api = { path = "api" }
 
 rocket = { version = "0.5.1", features = ["json"] }
 tokio = { version = "1.44.1", features = ["full"] }

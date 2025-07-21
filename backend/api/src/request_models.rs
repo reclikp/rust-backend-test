@@ -1,4 +1,4 @@
-use rocket::serde::Deserialize;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct AuthenticationRequest {
