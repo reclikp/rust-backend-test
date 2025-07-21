@@ -1,12 +1,13 @@
-use crate::middleware::response_models::NetworkResponse;
+use crate::middleware::response_models::{ErrorResponse, Response};
 use chrono::Utc;
 use entity::post::ActiveModel as PostModel;
 use rocket::http::Status;
 use rocket::response::status;
 use rocket::serde::json::Json;
 use rocket::{Route, State};
+use rocket::request::Outcome;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
-use crate::auth::authenticated_user::AuthenticatedUser;
+use authentication_macros::require_role;
 use crate::auth::jwt::JWT;
 
 pub fn get_routes() -> Vec<Route> {
@@ -24,10 +25,7 @@ fn index() -> &'static str {
 }
 
 #[post("/post/placeholder")]
-async fn create_post_placeholder(
-    // connection: &State<DatabaseConnection>
-)
- -> Result<status::Accepted<Json<String>>, Status> {
+async fn create_post_placeholder() -> Result<status::Accepted<Json<String>>, Status> {
     // let connection = connection as &DatabaseConnection;
     //
     // let title = format!("post_title_{}", Utc::now().timestamp());
@@ -49,12 +47,14 @@ async fn create_post_placeholder(
 }
 
 #[get("/authenticated-content")]
-fn authenticated_content(_jwt: JWT) -> Result<String, NetworkResponse> {
+fn authenticated_content(_jwt: JWT) -> Result<String, ErrorResponse> {
     Ok("User has been authenticated".to_string())
 }
 
+#[require_role("admin", "cipsko")]
 #[get("/admin-content")]
-fn admin_content(_user: AuthenticatedUser) -> Result<String, NetworkResponse> {
-    _user.has_role("super_admin");
-    Ok("User has been authenticated".to_string())
+fn admin_content() -> Result<Response<String>, ErrorResponse> {
+    // Err(ErrorResponse::new(Status::Forbidden, "Unsufficient permission"))
+
+    Ok(Response::new("Working as a shit".to_string()))
 }

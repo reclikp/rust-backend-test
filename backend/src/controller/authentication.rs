@@ -1,9 +1,9 @@
 use crate::config::app_state::AppState;
-use crate::middleware::response_models::{NetworkResponse, Response, ResponseBody};
-use entity::user;
+use crate::middleware::response_models::{ErrorResponse, Response};
 use rocket::serde::json::Json;
 use rocket::{Route, State};
-
+use rocket::http::Status;
+use serde::Serialize;
 use crate::auth::jwt::JWT;
 use crate::middleware::request_models::AuthenticationRequest;
 use crate::service;
@@ -15,23 +15,24 @@ pub fn get_routes() -> Vec<Route> {
     ]
 }
 
+#[derive(Serialize)]
+struct AuthenticationResponse {
+    token: String
+}
+
 #[post("/authenticate", format = "json", data = "<request>")]
 async fn authenticate(
     request: Json<AuthenticationRequest>,
     app_state: &State<AppState>,
-) -> Result<NetworkResponse, NetworkResponse> {
+) -> Result<Response<AuthenticationResponse>, ErrorResponse> {
     let result = app_state.authentication_service.authenticate(request.into_inner()).await;
 
     match result {
         Some(token) => {
-            let response = Response {
-                body: ResponseBody::AuthenticationToken(token),
-            };
+            let response = Response::new(AuthenticationResponse { token });
 
-            let json = serde_json::to_string(&response).map_err(|_| NetworkResponse::InternalError(None))?;
-
-            Ok(NetworkResponse::Created(json))
+            Ok(response)
         }
-        None => Err(NetworkResponse::Unauthorized("Invalid credentials".to_string()))
+        None => Err(ErrorResponse::new(Status::Unauthorized, "Invalid credentials"))
     }
 }
