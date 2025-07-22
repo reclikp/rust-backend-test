@@ -115,14 +115,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "api"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "arrayvec"
 version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -346,14 +338,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
 
 [[package]]
-name = "authentication"
-version = "0.1.0"
-dependencies = [
- "api",
- "entity",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -361,21 +345,21 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "backend_app"
-version = "0.1.0"
+version = "0.7.0"
 dependencies = [
- "api",
  "chrono",
  "entity",
  "jsonwebtoken",
- "macros",
  "migration",
+ "proc-macro2",
+ "quote",
  "rand 0.9.0",
  "rocket",
  "rocket_cors",
  "sea-orm",
  "sea-orm-cli",
  "serde",
- "serde_json",
+ "syn 2.0.104",
  "tokio",
 ]
 
@@ -1725,15 +1709,6 @@ dependencies = [
  "serde_json",
  "tracing",
  "tracing-subscriber",
-]
-
-[[package]]
-name = "macros"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.104",
 ]
 
 [[package]]

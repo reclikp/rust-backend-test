@@ -31,13 +31,14 @@ pub fn require_role(args: TokenStream, input: TokenStream) -> TokenStream {
     let expanded_fn = quote! {
         #(#fn_attrs)*
         #fn_vis async fn #fn_name #fn_generics(
-            auth_user: backend::auth::AuthenticatedUser,
+            auth_user: crate::auth::authenticated_user::AuthenticatedUser,
             #fn_inputs
         ) #fn_outputs {
+            use crate::middleware::response_models::StatusCode;
 
             if  !auth_user.has_role(#required_role) {
                 return Err(ErrorResponse::new(
-                    Status::Forbidden,
+                    StatusCode::FORBIDDEN,
                     "Insufficient permissions",
                 ));
             }
@@ -47,10 +48,4 @@ pub fn require_role(args: TokenStream, input: TokenStream) -> TokenStream {
     };
 
     TokenStream::from(expanded_fn)
-
-    // let expand = quote! {
-    //     #input_fn
-    // };
-    //
-    // TokenStream::from(expand)
 }

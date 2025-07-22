@@ -7,7 +7,7 @@ use rocket::serde::json::Json;
 use rocket::{Route, State};
 use rocket::request::Outcome;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, NotSet, Set};
-use macros::require_role;
+use backend_app::require_role;
 use crate::auth::jwt::JWT;
 
 pub fn get_routes() -> Vec<Route> {
@@ -51,10 +51,8 @@ fn authenticated_content(_jwt: JWT) -> Result<String, ErrorResponse> {
     Ok("User has been authenticated".to_string())
 }
 
-#[require_role("admin", "cipsko")]
+#[require_role("admin")]
 #[get("/admin-content")]
 fn admin_content() -> Result<Response<String>, ErrorResponse> {
-    // Err(ErrorResponse::new(Status::Forbidden, "Insufficient permission"))
-
     Ok(Response::new("Working as a shit".to_string()))
 }

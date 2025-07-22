@@ -1,3 +1,7 @@
+use rocket::http::{ContentType, Status};
+use rocket::Request;
+use rocket::response::{Responder, Result, Response as RocketResponse};
+use rocket::serde::json::{serde_json, Json};
 use serde::Serialize;
 
 #[derive(Debug, Clone, Copy, Serialize)]
@@ -26,6 +30,15 @@ impl<T: Serialize> Response<T> {
     }
 }
 
+impl<'r, T: Serialize> Responder<'r, 'static> for Response<T> {
+    fn respond_to(self, req: &'r Request<'_>) -> Result<'static> {
+        RocketResponse::build_from(Json(self).respond_to(req)?)
+            .status(Status::Ok)
+            .header(ContentType::JSON)
+            .ok()
+    }
+}
+
 #[derive(Serialize, Debug)]
 pub struct ErrorResponse {
     pub error: ErrorDetail,
@@ -50,5 +63,16 @@ impl ErrorResponse {
                 details: None,
             }
         }
+    }
+}
+
+impl<'r> Responder<'r, 'static> for ErrorResponse {
+    fn respond_to(self, req: &'r Request<'_>) -> Result<'static> {
+        let status = Status::from_code(self.error.code).unwrap_or(Status::InternalServerError);
+
+        RocketResponse::build_from(Json(self).respond_to(req)?)
+            .status(status)
+            .header(ContentType::JSON)
+            .ok()
     }
 }

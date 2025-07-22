@@ -1,9 +1,0 @@
-[package]
-name = "authentication"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-entity = { path = "../entity" }
-api = { path = "../api" }
-core = { path = "../src" }
